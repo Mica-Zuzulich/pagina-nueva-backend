@@ -1,6 +1,6 @@
 import express from "express";
 import nodemailer from "nodemailer";
-import fetch from "node-fetch"; // 👈 importante para verificar el captcha
+import fetch from "node-fetch";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -10,7 +10,6 @@ const router = express.Router();
 router.post("/send", async (req, res) => {
   const { nombre, email, mensaje, captchaToken } = req.body;
 
-  // 1️⃣ Verificar reCAPTCHA con Google
   try {
     const captchaResponse = await fetch(
       "https://www.google.com/recaptcha/api/siteverify",
@@ -35,13 +34,12 @@ router.post("/send", async (req, res) => {
       .json({ success: false, message: "Error al verificar captcha" });
   }
 
-  // 2️⃣ Enviar el correo
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
         user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS, // contraseña o app password
+        pass: process.env.MAIL_PASS, 
       },
     });
 
